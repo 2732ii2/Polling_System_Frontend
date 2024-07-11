@@ -9,7 +9,7 @@ import io from "socket.io-client";
 import { clearData, saveData, serverOn } from './Api';
 import { useNavigate } from 'react-router-dom';
 const Url="https://polling-application-backend.onrender.com/";
-// "http://localhost:3001/"
+// const Url= "http://localhost:3001/"
 const socket =io.connect(Url)
 
 export default function Polling() {
@@ -122,11 +122,11 @@ export default function Polling() {
         socket.emit(`third`,[1,state[2]+=100]);
     }
   return (
-    <div style={{width:"100%",height:"100vh",display:"flex",flexDirection:"column",justifyContent:'center',alignItems:"center",gap:"50px"}}>
-        <div style={{width:"80%",height:"70px",display:"flex",justifyContent:"space-between",flexWrap:"wrap",alignItems:"center",marginBottom:"10px",marginTop:"10px"}}>
+    <div style={{width:"100%",height:"100vh",display:"flex",flexDirection:"column",justifyContent:'center',alignItems:"center",gap:"30px"}}>
+        <div style={{width:"80%",height:"70px",display:"flex",justifyContent:"space-between",flexWrap:"wrap",alignItems:"center",marginBottom:"10px",marginTop:"20px",gap:"20px"}}>
             {/* <div onClick={()=>navi("/")} style={{position:"abs"}}> <KeyboardBackspaceIcon /> </div> */}
             <div onClick={()=>navi("/")} style={{position:"absolute",top:"3%",left:"3%"}}> <KeyboardBackspaceIcon /> </div>
-            <h1 >Which is your favourite Car ? </h1>
+            <h1 style={{fontSize:"20px",textAlign:"center"}} >Which is your favourite Car ? </h1>
             <div style={{width:"auto",display:"flex",gap:"10px",justifyContent:"center",alignItems:"center"}}>
             <button onClick={()=>{
                 console.log(state);
@@ -142,7 +142,7 @@ export default function Polling() {
             }} style={{background:"black",color:"white",padding:"8px",paddingLeft:"10px",paddingRight:"10px",borderRadius:"4px",fontSize:"14px",letterSpacing:"1px",cursor:"pointer"}}>Save Result</button>
             </div>
         </div>
-        <div style={{width:"80%" ,height:"90%" ,display:"flex",justifyContent:"space-between",flexWrap:"wrap",transition:"all 1s",overflow:"scroll",gap:"10px",paddingTop:"10px",paddingBottom:"10px"}}>
+        <div style={{width:"85%" ,padding:"5px",height:"90%" ,display:"flex",justifyContent:"space-between",flexWrap:"wrap",transition:"all 1s",overflow:"scroll",gap:"10px",paddingTop:"10px",paddingBottom:"10px"}}>
 
             {
                 arr.map((e,i)=>{

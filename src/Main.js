@@ -6,9 +6,9 @@ export default function Main() {
   return (
     <div style={{width:"100%",height:"100vh",display:'flex',flexDirection:"column",alignItems:"center",justifyContent:'center',gap:"20px"}}>
         
-            <button onClick={()=>{
+            {/* <button onClick={()=>{
                 navi("/home");
-            }} style={{width:"150px",height:"35px",border:"none",background:"black",color:"white",fontSize:"16px",borderRadius:"4px"}}>Messaging</button>
+            }} style={{width:"150px",height:"35px",border:"none",background:"black",color:"white",fontSize:"16px",borderRadius:"4px"}}>Messaging</button> */}
             <button onClick={()=>{
                 navi("/polling");
             }}  style={{width:"150px",height:"35px",border:"none",background:"black",color:"white",fontSize:"16px",borderRadius:"4px"}}> Polling</button>
