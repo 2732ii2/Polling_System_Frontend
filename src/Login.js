@@ -7,7 +7,7 @@ import { GetCode } from './Redux/actions';
 const code= new URLSearchParams(window.location.search).get('code');
 
 
-export default function Login() {
+ function Login() {
     const navi=useNavigate();
     const dispatch=useDispatch();
     useEffect(()=>{

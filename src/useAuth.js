@@ -9,21 +9,24 @@ export default function useAuth(code) {
 
     useEffect(()=>{
 
-        if(code)
+      const call=  async ()=>{
+          if(code)
 
         {
             console.log("code => ",code);
-            axios.post("http://localhost:3001/login",{
+          try{
+            const res= await axios.post("http://localhost:3001/login",{
                 code,
             })
-            .then(res=>{
-                setaccess_token (res.data);
-
-            })
-            .catch(e=>{
-                console.log (e?.message);
-            })
+            setaccess_token(res.data);
+          }
+          catch(e){
+            console.log(e);
+          }
+         
         }
+        }
+        call();
   
 
     },[code])
