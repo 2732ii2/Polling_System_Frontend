@@ -33,7 +33,7 @@ const clearData=async()=>{
 }
 const addbook=async(data)=>{
     try{
-        const resp=await axios.post(`http://localhost:3001/addbook`,data);
+        const resp=await axios.post(`${Url}addbook`,data);
         return (resp);
     }
     catch(e){
@@ -42,7 +42,7 @@ const addbook=async(data)=>{
 }
 const getbook=async()=>{
     try{
-        const resp=await axios.get(`http://localhost:3001/getbook`);
+        const resp=await axios.get(` ${Url}getbook`);
         console.log("resp-",resp.data.data);
         return (resp.data.data);
     }
@@ -56,7 +56,7 @@ const getbook=async()=>{
 const deletebyid=async(id)=>{
     console.log(id);
     try{
-        const resp=await axios.post(`http://localhost:3001/deletebyid`,{"id": id});
+        const resp=await axios.post(`${Url}deletebyid`,{"id": id});
         console.log("resp-",resp.data.data);
         return (resp.data.data);
     }
@@ -69,7 +69,7 @@ const deletebyid=async(id)=>{
 // borrow
 const BorrowBook=async (data)=>{
  try{
-    const resp=await axios.post("http://localhost:3001/borrow",data);
+    const resp=await axios.post(`${Url}borrow`,data);
     console.log(resp);
     return (resp.data.data);
  }
@@ -81,7 +81,7 @@ const BorrowBook=async (data)=>{
 
 const EditBook=async ({id,obj})=>{
     try{
-       const resp=await axios.post("http://localhost:3001/updatebook",{id,data:obj});
+       const resp=await axios.post(`${Url}updatebook`,{id,data:obj});
        console.log(resp);
     
        return (resp.data.data);

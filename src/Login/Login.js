@@ -11,7 +11,8 @@ import {useDispatch} from "react-redux";
 import { AddUserSession } from "../Redux/actions";
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client"
-const socket =io.connect( "http://localhost:3001/");
+const Url="https://polling-application-backend.onrender.com/";
+const socket =io.connect(`${Url}`);
 const Login =()=>{
     const list=[{label:"Email",type:"text"},{
         label:"Password",type:"password"
@@ -125,7 +126,7 @@ const SignUpComp=({show,setshow})=>{
     };
     console.log(main);
        try{
-        const resp= await axios.post("http://localhost:3001/register",main);
+        const resp= await axios.post(`${Url}register`,main);
         console.log(resp?.data);
         if(resp?.data?.error){
             // condition of error ;

@@ -11,7 +11,8 @@ import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import io from "socket.io-client";
 import { countofBooks } from './Redux/actions';
 import LibraryHeader from './LibraryHeader';
-const Url= "http://localhost:3001/";
+// const Url= "http://localhost:3001/";
+const Url="https://polling-application-backend.onrender.com/";
 const socket =io.connect(Url);
 export default function AdminDashboard() {
    const dispatch= useDispatch();
@@ -26,7 +27,7 @@ export default function AdminDashboard() {
 
    const getCount=async()=>{
         try{
-            const resp=await axios.get(`http://localhost:3001/bookCount`);
+            const resp=await axios.get(`${Url}bookCount`);
             console.log("resp-",resp.data.data);
             dispatch(countofBooks(resp.data.data));
         }
