@@ -91,6 +91,16 @@ const EditBook=async ({id,obj})=>{
        return {mess:e?.message};
     }
    }
-   
+const SignIn=async(data)=>{
+    try{
+        const resp=await axios.post(`${Url}signin`,data);
+        console.log(resp?.data);
+        return resp?.data
+    }
+    catch(e){
+        console.log(e?.message);
+        return {mess:e?.message};
+    }
+}
 
-export {saveData,clearData,serverOn,addbook,getbook,deletebyid,BorrowBook,EditBook};
+export {saveData,clearData,SignIn,serverOn,addbook,getbook,deletebyid,BorrowBook,EditBook};

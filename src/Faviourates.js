@@ -108,7 +108,7 @@ const [isloading,setisLoading]=useState(true);
       <KeyboardBackspaceIcon className=' cursor-pointer  transition-all active:scale-50 absolute top-[120px] left-[8%]' onClick={()=>{
           setTimeout(()=>{
               //  alert("hello");
-              navi("/library");
+              navi("/");
           },100)
          }}/>
 

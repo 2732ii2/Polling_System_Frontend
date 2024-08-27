@@ -192,7 +192,7 @@ else{
         
             EditBook({id:(localStorage.getItem("editid")),obj})
             localStorage.removeItem('editid');
-            navi("/library");
+            navi("/");
         // setrecall(!recall);
         // socket.emit('sendupdatedcountofbooks',1);
         // socket.emit(`sendupdatedcountofbooks`,[1,'something']);

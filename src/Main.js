@@ -9,7 +9,7 @@ export default function Main() {
   return (
     <div style={{width:"100%",height:"100vh",display:'flex',flexDirection:"column",alignItems:"center",justifyContent:'center',gap:"20px"}}>
         
-            <button onClick={()=>{
+            {/* <button onClick={()=>{
                 navi("/home");
             }} style={{width:"150px",height:"35px",border:"none",background:"black",color:"white",fontSize:"16px",borderRadius:"4px"}}>Messaging</button>
             <button onClick={()=>{
@@ -17,7 +17,7 @@ export default function Main() {
             }}  style={{width:"150px",height:"35px",border:"none",background:"black",color:"white",fontSize:"16px",borderRadius:"4px"}}> Polling</button>
                         <button onClick={()=>{
                 navi("/dashboard");
-            }}  style={{width:"150px",height:"35px",border:"none",background:"black",color:"white",fontSize:"16px",borderRadius:"4px"}}> Dashboard</button>
+            }}  style={{width:"150px",height:"35px",border:"none",background:"black",color:"white",fontSize:"16px",borderRadius:"4px"}}> Dashboard</button> */}
             {/* <button onClick={()=>{
                 navi("/mediaplayer");
             }}  style={{width:"150px",height:"35px",border:"none",background:"black",color:"white",fontSize:"16px",borderRadius:"4px"}}> Songs</button> */}

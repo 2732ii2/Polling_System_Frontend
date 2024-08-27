@@ -10,6 +10,7 @@ import toast,{Toaster} from "react-hot-toast";
 import {useDispatch} from "react-redux";
 import { AddUserSession } from "../Redux/actions";
 import { useNavigate } from "react-router-dom";
+import {SignIn} from "../Api";
 import io from "socket.io-client"
 const Url="https://polling-application-backend.onrender.com/";
 const socket =io.connect(`${Url}`);
@@ -17,10 +18,11 @@ const Login =()=>{
     const list=[{label:"Email",type:"text"},{
         label:"Password",type:"password"
     }]
+    const dispatch=useDispatch();
     useEffect(()=>{
       socket.emit("loginemits",1);
     },[socket])
-
+    const navi=useNavigate();
     const [states, setstates]=useState({
         Email:"",
         Password:""
@@ -32,7 +34,7 @@ const Login =()=>{
         })
     }
     console.log(states);
-    const [show,setshow]=useState(true);
+    const [show,setshow]=useState(false);
     return <div className="w-[100%] h-[100vh] flex bg-[white]">
         <div className="min-w-[50%] overflow-hidden !transition-all   relative h-[100%] flex items-center justify-center">
             <div className="w-[60%] h-[auto] py-[20px] flex flex-col  ">
@@ -49,18 +51,43 @@ const Login =()=>{
                         
                         }
                     </div>
-                    <button className=" mt-[10px] bg-black w-[auto] mx-auto px-[50px] py-[10px] text-[20px] text-white rounded-[10px]">Login</button>
+                    <button onClick={async ()=>{
+                        console.log(states);
+                        const resp= await SignIn(states);
+                        console.log("=> resp",resp.mess);
+                        if(resp?.mess==="user Successfully Login"){
+                            dispatch(AddUserSession(resp));
+                            // socket.emit(`sendupdatedcountofbooks`,[1,'something']);
+                            localStorage.setItem("usersession",JSON.stringify(resp))
+                            toast.success(resp?.mess);
+                            setTimeout(()=>{
+                               navi("/");
+                            },1000)
+                          
+                        }
+                        else{
+                            console.log('going into error')
+                            toast.error(resp?.mess)
+                        }
+                        setstates({
+                            Email:"",
+                            Password:""
+                        })
+         
+                    }} className=" mt-[10px] bg-black w-[auto] mx-auto px-[50px] py-[10px] text-[20px] text-white rounded-[10px]">Login</button>
                     <p className="text-[18px] mt-[20px] w-[100%] text-center unselect">Don't have an account ? Go to <span onClick={()=>{
                         // alert("hellor");
                         setshow(!show)
                     }} className="text-[red] cursor-pointer font-semibold tracking-wider underline">SignUp</span></p>
             </div>
             < SignUp show={show} />
+            <Toaster position={"top-right"} reverseOrder={false}/>
         </div>
         <div className="min-w-[50%] h-[100%] relative flex items-center justify-center  bg-[white]">
             <img src={logo} className=" w-[100%] h-[100%] object-cover opacity-[.9]"/>
         <SignUpComp  show={show} setshow={setshow}/>
         </div>
+
     </div>
 }
 
@@ -138,7 +165,7 @@ const SignUpComp=({show,setshow})=>{
             localStorage.setItem("usersession",JSON.stringify(resp?.data))
             toast.success(resp?.data?.mess);
             setTimeout(()=>{
-               navi("/library");
+               navi("/");
             },1000)
         }
         setroles({

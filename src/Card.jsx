@@ -55,7 +55,7 @@ function dateconverter(dateString){
                                    <p className='font-semibold spec text-[22px]'>{ data?.authors?data?.authors[0]:"-"}</p>
                                </div>
                                <div className='w-[70%] h-[100%] px-[20px] flex flex-col'>
-                                   <h2 className=' font-sans text-[20px] font-semibold h-[30px] tracking-wider  overflow-clip'>{data?.title}</h2>
+                                   <h2 className=' font-sans text-[20px] font-semibold h-[30px] tracking-wider  overflow-clip w-[80%]  '>{data?.title}</h2>
                                <p className=' !line-clamp-5 text-[14px]  font-medium   '> {data?.description}</p>
                                     <div className='w-[100%] h-[40px]   flex '>
                                        {

@@ -23,13 +23,15 @@ function App() {
   <Provider store={store}>
   <div className="App">
   <Routes>
-        <Route path='/' element={<Main />} />
+        {/* <Route path='/' element={<Main />} /> */}
+        <Route path='/' element={<Library />} />
+
         <Route path='/home' element={< Home/>} />
         <Route path='/polling' element={< Polling/>} />
         {/* <Route path='/login' element={< Login/>} /> */}
         <Route path='/dashboard' element={< Dashboard/>} />
         {/* <Route path='/mediaplayer' element={< Mediaplayer/>} /> */}
-        <Route path='/library' element={< Library />} />
+        {/* <Route path='/library' element={< Library />} /> */}
         <Route path='/library/addbook' element={< AddBook />} />
         <Route path='/admin' element={< AdminDashboard />} />
         <Route path= '/save'  element={<Faviourates />}/>
