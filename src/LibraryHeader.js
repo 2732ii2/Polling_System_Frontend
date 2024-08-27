@@ -7,6 +7,7 @@ import { AddUserSession } from './Redux/actions';
 export default function LibraryHeader() {
   const navi=useNavigate();
   const select=useSelector(state=>state);
+  var type=(select?.usersession?.userprofile?.type);
   const [submenu,setsubmenu]=useState(false);
   // useEffect(()=>{
   //   console.log(select);
@@ -18,14 +19,24 @@ export default function LibraryHeader() {
       if(!select?.usersession?.userprofile)
       dispatch(AddUserSession(localSavedSession)); 
   }
-  const list=["Profile","Favourites","LogOut"];
+  const list=["Profile",type =="admin"?"Dashboard":type=="user"?"Favourites":"Add Book","LogOut"];
   function clickHandler(index){
     if(index == 2){
       dispatch(AddUserSession({})); 
       localStorage.removeItem("usersession");
+      navi("/")
     }
     else if (index==1){
-      navi("/save");
+      if(type=="admin"){
+        navi("/admin");
+      }
+      else if (type=="user"){
+        navi("/save");
+      }
+      else{
+        navi("/addbook")
+      }
+     
     }
   }
   return (

@@ -9,7 +9,7 @@ import axios from 'axios';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 
 import io from "socket.io-client";
-import { countofBooks } from './Redux/actions';
+import { AddUserSession, countofBooks } from './Redux/actions';
 import LibraryHeader from './LibraryHeader';
 // const Url= "http://localhost:3001/";
 const Url="https://polling-application-backend.onrender.com/";
@@ -24,7 +24,11 @@ export default function AdminDashboard() {
     // }
    const select= useSelector(state=>state);
    console.log(select);
-
+   const localSavedSession=JSON.parse(localStorage.getItem("usersession"));
+  if(localSavedSession){
+      if(!select?.usersession?.userprofile)
+      dispatch(AddUserSession(localSavedSession)); 
+  }
    const getCount=async()=>{
         try{
             const resp=await axios.get(`${Url}bookCount`);
@@ -38,7 +42,7 @@ export default function AdminDashboard() {
         }
     }
 
-    
+    var type=select?.usersession?.userprofile?.type;
     useEffect(()=>{
         socket.emit("libraryemits",1);
         socket.emit(`sendupdatedcountofbooks`,[1,'something']);
@@ -55,6 +59,8 @@ export default function AdminDashboard() {
     console.log(selectedTabs);
     var list_=[{name:"Total User",value:select?select?.count[2]:null},{name:"Over due Count",value:10},{name:"Total Book",value:select?select?.count[0]:null},{name:"Total Borrowed",value:select?select?.count[1]:"100"}];
   return (
+
+    type=="admin"?
     <div className='w-[100%] h-[100vh] flex flex-col'>
         <LibraryHeader />
         
@@ -116,6 +122,8 @@ export default function AdminDashboard() {
 
         </div>
     </div>
+       :
+    <div className="bg-black w-[100%]   h-[100vh] flex items-center   justify-center text-[white]  text-[25px] tracking-wider font-semibold "   > 403 Forbidden: You do not have access to this page. </div>
   )
 }
 

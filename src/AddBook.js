@@ -5,7 +5,7 @@ import  toast, { Toaster } from 'react-hot-toast';
 import { addbook } from './Api';
 import {useDispatch, useSelector} from "react-redux";
 import io from "socket.io-client";
-import { countofBooks, setupdatecall } from './Redux/actions';
+import { AddUserSession, countofBooks, setupdatecall } from './Redux/actions';
 import { AddElementComp, InputComp } from './CustomCom/Custom';
 const Url="https://polling-application-backend.onrender.com/";
 // const Url= "http://localhost:3001/";
@@ -34,6 +34,16 @@ export default function AddBook() {
       };
       const select =useSelector(state=>state);
       console.log(select);
+      const localSavedSession=JSON.parse(localStorage.getItem("usersession"));
+      if(localSavedSession){
+          if(!select?.usersession?.userprofile)
+          dispatch(AddUserSession(localSavedSession)); 
+      }
+      var type=select?.usersession?.userprofile?.type;
+      console.log(type=='librarian');
+      useEffect(()=>{
+        console.log("updated")
+      },[select])
       const [recall,setrecall]=useState(false);
       useEffect(()=>{
         socket.emit("libraryemits",1);
@@ -85,6 +95,7 @@ export default function AddBook() {
       const [statetoshow,setstatetoshow]=useState("volumeInfo");
     //   console.log(statetoshow);
   return (
+    type=='librarian'?
     <div className='w-[100%] h-[100vh] flex flex-col'>
         <LibraryHeader />
         <div className='w-[90%] flex   h-[85vh]  scroller bg-[rgba(0,0,0,.1111)] rounded-lg mx-auto mt-[20px]'>
@@ -177,6 +188,8 @@ export default function AddBook() {
             />
             </div>
     </div>
+           :
+           <div className="bg-black w-[100%]   h-[100vh] flex items-center   justify-center text-[white]  text-[25px] tracking-wider font-semibold "   > 403 Forbidden: You do not have access to this page. </div>
 
   )
 }

@@ -7,7 +7,7 @@ import {useState,useEffect} from "react";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import  BorderColorDetector from "./BorderColorDetector";
 import { useDispatch, useSelector } from 'react-redux';
-import { ApiDataAddition } from './Redux/actions';
+import { AddUserSession, ApiDataAddition } from './Redux/actions';
 import { FadeLoader} from "react-spinners";
 import { BorrowBook, getbook } from './Api';
 import io from "socket.io-client"
@@ -17,7 +17,15 @@ const Url="https://polling-application-backend.onrender.com/";
 // const Url='http://localhost:3001/';
 const socket=io.connect(Url);
 export default function Faviourates() {
-
+  const dispatch=useDispatch();
+  var select =useSelector(state=>state);
+  var type=select?.usersession?.userprofile?.type;
+  console.log(type);
+  const localSavedSession=JSON.parse(localStorage.getItem("usersession"));
+      if(localSavedSession){
+          if(!select?.usersession?.userprofile)
+          dispatch(AddUserSession(localSavedSession)); 
+      }
   var [list,setlist]=useState([]);
   const [overduelist, setoverduelist]=useState();
   const [borrowedlist,setborrowedlist]=useState();
@@ -101,6 +109,7 @@ const [isloading,setisLoading]=useState(true);
  const [showbyfilter, setshowbyfilter]=useState(filters[0]);
  console.log(showbyfilter);
   return (
+    type=="user"?
     <div className='w-[100%] relative  h-[100vh] flex flex-col  '>
 
         
@@ -211,6 +220,8 @@ const [isloading,setisLoading]=useState(true);
 }
      </div>
     </div>
+    :
+    <div className="bg-black w-[100%]   h-[100vh] flex items-center   justify-center text-[white]  text-[25px] tracking-wider font-semibold "   > 403 Forbidden: You do not have access to this page. </div>
   )
 }
 

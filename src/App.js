@@ -32,7 +32,7 @@ function App() {
         <Route path='/dashboard' element={< Dashboard/>} />
         {/* <Route path='/mediaplayer' element={< Mediaplayer/>} /> */}
         {/* <Route path='/library' element={< Library />} /> */}
-        <Route path='/library/addbook' element={< AddBook />} />
+        <Route path='/addbook' element={< AddBook />} />
         <Route path='/admin' element={< AdminDashboard />} />
         <Route path= '/save'  element={<Faviourates />}/>
         <Route path= '/login'  element={<Login />}/>
