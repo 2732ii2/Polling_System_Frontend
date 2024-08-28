@@ -4,8 +4,18 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useEffect,useState} from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import {useNavigate} from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { AddUserSession } from './Redux/actions';
 export default function CardComp(props) {
-   
+   var select=useSelector(state=>state);
+   console.log( select?.usersession)
+   var type=select?.usersession?.userprofile?.type;
+   const dispatch=useDispatch();
+    const localSavedSession=JSON.parse(localStorage.getItem("usersession"));
+  if(localSavedSession){
+      if(!select?.usersession?.userprofile)
+      dispatch(AddUserSession(localSavedSession)); 
+  }
 function dateconverter(dateString){
     // const dateString = '1993-06-17T00:00:00.000Z';
     const date = new Date(dateString);
@@ -67,11 +77,18 @@ function dateconverter(dateString){
                                         <div  className='w-[auto] ml-[20px] flex items-center font-bold justify-center px-[10px] h-[auto] !py-[5px] mt-[5px] text-[black] bg-[rgba(0,0,0,0.2)] rounded-md text-[12px]'>{dateconverter(data?.publishedDate)}</div>
                                </div>
                            </div>
-                           <EditIcon onClick={()=>{
-                            navi("/edit");
-                            editHandler(id)
-                           }} className=" pt-[5px] !text-[26px] !text-[blue]  flex items-center justify-center  cursor-pointer  active:text-[red] active:scale-50 pb-1  absolute w-[20px] h-[20px] left-auto right-[45px] top-1 font-sans  transition-all"/>
-                           <FavoriteIcon onClick={()=>onClickHandler(id)} className={`delete   pt-[5px]   flex items-center justify-center  cursor-pointer  ${arr.includes(id)?"!text-[red]":"!text-[rgba(0,0,0)]"} active:text-[red] active:scale-50 pb-1  absolute w-[20px] h-[20px] left-auto right-2 top-1 font-sans  transition-all`}/>          
+                        {  Object.keys(select?.usersession).length ? <>
+                        
+                        
+                        {type=="librarian"?   <EditIcon onClick={()=>{
+                        navi("/edit");
+                        editHandler(id)
+                        }} className=" pt-[5px] !text-[26px] !text-[blue]  flex items-center justify-center  cursor-pointer  active:text-[red] active:scale-50 pb-1  absolute w-[20px] h-[20px] left-auto right-2 top-1 font-sans  transition-all"/> :<div></div>}
+                        
+                     {type=="user"?   <FavoriteIcon onClick={()=>onClickHandler(id)} className={`delete   pt-[5px]   flex items-center justify-center  cursor-pointer  ${arr.includes(id)?"!text-[red]":"!text-[rgba(0,0,0)]"} active:text-[red] active:scale-50 pb-1  absolute w-[20px] h-[20px] left-auto right-2 top-1 font-sans  transition-all`}/>  :<></> }
+                        </> 
+                        :<div></div>
+                        }      
     </div>
   )
 }

@@ -5,8 +5,18 @@ import { AddElementComp, InputComp } from "../CustomCom/Custom"
 import  CardComp from "../Card.jsx";
 import { EditBook } from "../Api";
 import {useNavigate} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AddUserSession } from "../Redux/actions.js";
 const Edit =()=>{
-
+    var select=useSelector(state=>state);
+    console.log( select?.usersession)
+    var type=select?.usersession?.userprofile?.type;
+    const dispatch=useDispatch();
+     const localSavedSession=JSON.parse(localStorage.getItem("usersession"));
+   if(localSavedSession){
+       if(!select?.usersession?.userprofile)
+       dispatch(AddUserSession(localSavedSession)); 
+   }
     function dateconverter(dateString){
         // const dateString = '1993-06-17T00:00:00.000Z';
         const date = new Date(dateString);
@@ -76,7 +86,7 @@ const Edit =()=>{
       }
 
 
-    return <div className="flex flex-col w-[100%] h-[100vh] bg-[rgba(0,0,0,.05)] ">
+    return   type=="librarian"? <div className="flex flex-col w-[100%] h-[100vh] bg-[rgba(0,0,0,.05)] ">
         <LibraryHeader/>
         <div className="flex w-[100%] h-[95%] bg-[rgba(0,0,0,.1)] relative">
         <h1 className="text-black text-[24px] absolute  right-[20%] py-2 top-[29px] bg-[rgba(255,255,255)] text-[rgba(0,0,0,.7)] font-medium px-[20px] rounded-[4px]">Edit your Book</h1>
@@ -119,7 +129,7 @@ const Edit =()=>{
                 position="top-right"
                 reverseOrder={false}
             />
-    </div>
+    </div>:  <div className="bg-black w-[100%]   h-[100vh] flex items-center   justify-center text-[white]  text-[25px] tracking-wider font-semibold "   > 403 Forbidden: You do not have access to this page. </div>
 }
 export default Edit
 
