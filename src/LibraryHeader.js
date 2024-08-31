@@ -40,7 +40,7 @@ export default function LibraryHeader() {
     }
   }
   return (
-    <div className='header relative w-[100%] h-[100px]  bg-[white]  flex justify-between items-center px-[50px]'>
+    <div className='header relative w-[100%] min-h-[100px]  bg-[white]  flex justify-between items-center px-[50px]'>
     <div  onClick={()=>{
         navi("/");
        }} className='icon  cursor-pointer w-[auto] h-[80px] flex items-center gap-[10px] '>

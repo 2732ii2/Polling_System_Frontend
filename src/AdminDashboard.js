@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import HomeIcon from '@mui/icons-material/Home';
 import { Space, Table, Tag } from 'antd';
+import icon1 from "../src/Images/open-book.png";
+import icon2 from "../src/Images/profile-user.png";
 
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import { getCount } from './Api';
@@ -32,7 +34,7 @@ export default function AdminDashboard() {
    const getCount=async()=>{
         try{
             const resp=await axios.get(`${Url}bookCount`);
-            console.log("resp-",resp.data.data);
+            console.log("resp-",resp.data.data);  
             dispatch(countofBooks(resp.data.data));
         }
         catch(e){
@@ -57,11 +59,13 @@ export default function AdminDashboard() {
     }]  
     const [selectedTabs,setSelectedTabs]=useState(options[0].name);
     console.log(selectedTabs);
+    const [category,setcategory]=useState("All");
+    console.log(category)
     var list_=[{name:"Total User",value:select?select?.count[2]:null},{name:"Over due Count",value:10},{name:"Total Book",value:select?select?.count[0]:null},{name:"Total Borrowed",value:select?select?.count[1]:"100"}];
   return (
 
     type=="admin"?
-    <div className='w-[100%] h-[100vh] flex flex-col'>
+    <div className='w-[100%] h-[100vh] overflow-hidden flex flex-col'>
         <LibraryHeader />
         
         <div className='w-[100%] h-[91%] flex '>
@@ -83,7 +87,22 @@ export default function AdminDashboard() {
                      })  
             }
         </div>
-        <div className='w-[90%] h-[100%]   flex  flex-col items-center'>
+        {selectedTabs=="User"?<div className="h-[100%] flex justify-center      flex-wrap gap-[20px] overflow-scroll   py-[40px] px-5 w-[85%] ml-auto mr-[0px]  ">
+          {
+            select?.count?.length ? select.count[3].map((e,i)=>{
+              if(e?.type!="admin")
+              return <div className="w-[30%] min-w-[250px] rounded-[3px] gap-2 h-[250px] bg-[rgba(0,0,0,.1)] p-5  flex flex-col  " key={i}>
+                <div  className="flex justify-end items-center w-[100%] ">
+                     <img src={e?.type=="user"?icon2: icon1} className="h-[30px]" />
+                </div>
+                <div className="w-[100%] h-[50%] text-[32px] serif flex items-center justify-center">{ e?.type=="user"? i+i-2:"-"}</div>
+                     <div className="capitalize px-2 font-medium tracking-wider serif" >{e?.UserName}</div>
+                     <div className="capitalize font-medium !tracking-wider sans bg-[rgba(0,0,0,.9)] py-1 px-2 text-white">{e?.Email}</div>
+              </div>
+            }):null
+          }
+        </div>:
+          <div className='w-[90%] h-[100%]   flex  flex-col items-center'>
             <div className='w-[90%] h-[180px] flex !px-[20px] !py-[10px] items-center  justify-between rounded-lg border-[2px]  border-[rgba(0,0,0,.1)] mt-[5px]'>
                 {
                     list_.map((e,i)=>{
@@ -99,16 +118,22 @@ export default function AdminDashboard() {
                         <div className="w-[50%] gap-4 pt-3 bg-white rounded-[20px] h-[90%] flex flex-col border-[1px] border-[white]">
                            <div className="flex gap-3 w-[100%] pr-4 pt-2 items-center justify-end">
 
-                            <label className="text-[18px] font-mono font-semibold tracking-wide " for="cars">Choose a car:</label>
+                            <label className="text-[18px]  font-medium tracking-wide " for="cars">Choose category</label>
         
-                                <select name="cars" id="cars" className="border-[2px] unselect font-bold border-black px-4 py-2 rounded-[4px]">
-                                <option value="volvo">Volvo</option>
-                                <option value="saab">Saab</option>
-                                <option value="mercedes">Mercedes</option>
-                                <option value="audi">Audi</option>
+                                <select onChange={(e)=>{
+                                  console.log("=>",e.target.value);
+                                    setcategory(e.target.value);
+                                }} name="cars" id="cars" className="border-[1px] outline-none unselect tracking-wider border-black px-4 py-2 ">
+                                <option value="All">All</option>
+                                <option value="Borrowed">Borrowed</option>
+                               
                                 </select>
                            </div>
-                            <TableUIComp/>
+                            <TableUIComp data={select?.count?.length ?  category=="Borrowed"? select.count[4].filter(e=>{
+                              if(e?.borrowed){
+                                return e;
+                              }
+                            })?.slice(0,4) :select.count[4]?.slice(0,4) :[]}/>
 
                         </div>
                         <div className="w-[50%] h-[90%] ">
@@ -118,7 +143,7 @@ export default function AdminDashboard() {
 
 
 
-        </div>
+        </div>}
 
         </div>
     </div>
@@ -217,80 +242,117 @@ const PieChartdiv=({list})=>{
 
 }
 
-const TableUIComp=()=>{
+const TableUIComp=(props)=>{
+ var {data}=(props)
+ var c=[];
+ function dateconverter(dateString){
+  // const dateString = '1993-06-17T00:00:00.000Z';
+  const date = new Date(dateString);
 
+  const year = date.getUTCFullYear();
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+  const day = date.getUTCDate().toString().padStart(2, '0');
 
-
+  const formattedDate = `${day}-${month}-${year}`;
+  return (formattedDate);
+}
 const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a>{text}</a>,
+      title: 'Title',
+      dataIndex: 'volumeInfo',
+      key: 'volumeInfo',
+      render:  (_, { volumeInfo }) =>{
+        return  (<a>{volumeInfo?.title.length>30?volumeInfo.title.slice(0,10)+"...":volumeInfo.title}</a>)
+      },
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Authors',
+      dataIndex: 'volumeInfo',
+      key: 'volumeInfo',
+      render:  (_, { volumeInfo }) =>{
+        return  (<a>{volumeInfo?.authors}</a>)
+      },
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Category',
+      dataIndex: 'volumeInfo',
+      key: 'volumeInfo',
+      render:  (_, { volumeInfo }) =>{
+        return  (<a className="bg-[rgba(250,0,0,.2)] font-medium tracking-wide py-1 px-2 text-[red]">{volumeInfo?.categories[0]?.length>10?volumeInfo?.categories[0].slice(0,8)+"...":volumeInfo.categories[0]}</a>)
+      },
     },
     {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      title: 'Published Date',
+      dataIndex: 'volumeInfo',
+      key: 'volumeInfo',
+      render:  (_, { volumeInfo }) =>{
+        return  (<a className="bg-[rgba(0,0,0,.5)] font-medium tracking-wide py-1 px-2 text-[white]">{dateconverter(volumeInfo?.publishedDate)}</a>)
+      },
     },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
-        </Space>
-      ),
-    },
-  ];
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
+    // publishedDate
+    // {
+    //   title: 'Age',
+    //   dataIndex: 'age',
+    //   key: 'age',
+    // },
+    // {
+    //   title: 'Address',
+    //   dataIndex: 'address',
+    //   key: 'address',
+    // },
+    // {
+    //   title: 'Tags',
+    //   key: 'tags',
+    //   dataIndex: 'tags',
+    //   render: (_, { tags }) => (
+    //     <>
+    //       {tags.map((tag) => {
+    //         let color = tag.length > 5 ? 'geekblue' : 'green';
+    //         if (tag === 'loser') {
+    //           color = 'volcano';
+    //         }
+    //         return (
+    //           <Tag color={color} key={tag}>
+    //             {tag.toUpperCase()}
+    //           </Tag>
+    //         );
+    //       })}
+    //     </>
+    //   ),
+    // },
+    // {
+    //   title: 'Action',
+    //   key: 'action',
+    //   render: (_, record) => (
+    //     <Space size="middle">
+    //       <a>Invite {record.name}</a>
+    //       <a>Delete</a>
+    //     </Space>
+    //   ),
+    // },
+   ];
+  // const data = [
+  //   {
+  //     key: '1',
+  //     name: 'John Brown',
+  //     age: 32,
+  //     address: 'New York No. 1 Lake Park',
+  //     tags: ['nice', 'developer'],
+  //   },
+  //   {
+  //     key: '2',
+  //     name: 'Jim Green',
+  //     age: 42,
+  //     address: 'London No. 1 Lake Park',
+  //     tags: ['loser'],
+  //   },
+  //   {
+  //     key: '3',
+  //     name: 'Joe Black',
+  //     age: 32,
+  //     address: 'Sydney No. 1 Lake Park',
+  //     tags: ['cool', 'teacher'],
+  //   },
+  // ];
     return <Table columns={columns} dataSource={data} />
 }
