@@ -192,7 +192,7 @@ else{
     console.log("err");
     toast.error('Fill the manadatory filleds');
 }
- }} >Next</button>:  <button onClick={()=>{
+ }} >Next</button>:  <button onClick={async()=>{
     if(!(obj.type).length){
         toast.error('Select atleast one to submit');
     }
@@ -200,13 +200,17 @@ else{
         console.log(obj,localStorage.getItem("editid"));
         // addbook(obj);
         
-            EditBook({id:(localStorage.getItem("editid")),obj})
+            await EditBook({id:(localStorage.getItem("editid")),obj})
             localStorage.removeItem('editid');
-            navi("/");
+            toast.success('Successfully Saved');
+
+            setTimeout(()=>{
+                navi("/"); 
+            },[100])
         // setrecall(!recall);
         // socket.emit('sendupdatedcountofbooks',1);
         // socket.emit(`sendupdatedcountofbooks`,[1,'something']);
-        toast.success('Successfully Saved');
+        
     }
  }} type='submit' className={` disabled:bg-[rgba(0,0,0,.2)] disabled:text-[rgba(0,0,0,.4)] bg-[white] border-[1px] border-black text-[black] px-[10px]  transition-all ${statetoshow=="type"?"active:scale-50":""} rounded-md`} disabled={statetoshow!="type"}>Submit</button>}
     </div>

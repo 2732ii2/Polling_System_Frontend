@@ -2,7 +2,7 @@
 import  toast, { Toaster } from 'react-hot-toast';
 import axios from "axios";
 const Url="https://polling-application-backend.onrender.com/";
-// http://localhost:3001/
+// const Url= "http://localhost:3001/";
 
 const saveData=async(data)=>{
     try{
@@ -43,7 +43,7 @@ const addbook=async(data)=>{
 const getbook=async()=>{
     try{
         const resp=await axios.get(` ${Url}getbook`);
-        console.log("resp-",resp.data.data);
+        // console.log("resp-",resp.data.data);
         return (resp.data.data);
     }
     catch(e){
@@ -70,8 +70,8 @@ const deletebyid=async(id)=>{
 const BorrowBook=async (data)=>{
  try{
     const resp=await axios.post(`${Url}borrow`,data);
-    console.log(resp);
-    return (resp.data.data);
+    console.log(resp?.data);
+    return (resp.data);
  }
  catch(e){
     console.log(e);

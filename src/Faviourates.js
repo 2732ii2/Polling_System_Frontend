@@ -13,6 +13,7 @@ import { BorrowBook, getbook } from './Api';
 import io from "socket.io-client"
 
 import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 const Url="https://polling-application-backend.onrender.com/";
 // const Url='http://localhost:3001/';
 const socket=io.connect(Url);
@@ -27,6 +28,7 @@ export default function Faviourates() {
           dispatch(AddUserSession(localSavedSession)); 
       }
   var [list,setlist]=useState([]);
+  console.log(list);
   const [overduelist, setoverduelist]=useState();
   const [borrowedlist,setborrowedlist]=useState();
   console.log("overduelist",overduelist,borrowedlist);
@@ -46,22 +48,36 @@ export default function Faviourates() {
 const [isloading,setisLoading]=useState(true);
  var [selectedobj, setselectedobj]=useState();
   const [showmodel,setshowmodel] =useState(false);
-  var localStorageData=JSON.parse(localStorage.getItem("savelist"));
-  localStorageData=localStorageData?localStorageData:[];
+  const [localStorageData,setlocal]=useState([]);
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem(`${select?.usersession?.userprofile?._id}savelist`))?.filter(e => {
+        if (e?.userId == select?.usersession?.userprofile?._id) {
+            if (e.objectId) {
+                return e;
+            }
+        }
+    })?.map(e => e.objectId) || [];
+    setlocal(storedData);
+}, [select?.usersession?.userprofile?._id]); 
+// useEffect(() => {
+//   console.log(localStorageData);
+// }, [localStorageData]); 
+  // localStorageData=localStorageData?.length?localStorageData:[];
+  console.log(localStorageData);
    async function callApi(){
     const data =await getbook();
-    if(data?.mess){
+    if(data?.mess){ 
       setisLoading(false);
 
     }
     else{
       console.log(data);
-      
       var filteredData=data?.filter(ele=>{
         if(localStorageData.includes(ele?._id)){
           return ele
         }
       })
+      console.log(filteredData,localStorageData)
      setoverduelist(data?.filter(ele=>{
       if(localStorageData.includes(ele?._id)){
         if(ele?.overdue){
@@ -84,12 +100,12 @@ const [isloading,setisLoading]=useState(true);
    }
   useEffect(()=>{
     callApi();
-  },[])
+  },[localStorageData,showmodel])
 
 
-  useEffect(()=>{
-    console.log("udpated show model =>",showmodel);
-  },[showmodel])
+  // useEffect(()=>{
+  //   console.log("udpated show model =>",showmodel);
+  // },[showmodel])
 
 
   function dateconverter(dateString){
@@ -145,7 +161,7 @@ const [isloading,setisLoading]=useState(true);
           
           !overduelist?.length? <p className="spec text-[20px] tracking-wider"> Congratations , No overdue books , but hei did you even Borrowed  </p>:
           overduelist.map((e,i)=>{
-            return  <Innercard e={e} i={i} setshowmodel={setshowmodel} setselectedobj={setselectedobj} dateconverter={dateconverter}/>
+            return  <Innercard e={e} key={i} i={i} setshowmodel={setshowmodel} setselectedobj={setselectedobj} dateconverter={dateconverter}/>
           })
           
           
@@ -153,7 +169,7 @@ const [isloading,setisLoading]=useState(true);
 
           !borrowedlist?.length? <p> No, Borroed Book do check it for this </p>:
           borrowedlist.map((e,i)=>{
-            return  <Innercard e={e} i={i} setshowmodel={setshowmodel} setselectedobj={setselectedobj} dateconverter={dateconverter}/>
+            return  <Innercard e={e} key={i} i={i} setshowmodel={setshowmodel} setselectedobj={setselectedobj} dateconverter={dateconverter}/>
           })
           
           
@@ -162,7 +178,7 @@ const [isloading,setisLoading]=useState(true);
 
 
         list.map((e,i)=>{
-          return  <Innercard e={e} i={i} setshowmodel={setshowmodel} setselectedobj={setselectedobj} dateconverter={dateconverter}/>
+          return  <Innercard e={e} key={i} i={i} setshowmodel={setshowmodel} setselectedobj={setselectedobj} dateconverter={dateconverter}/>
         })
 
 }
@@ -205,11 +221,19 @@ const [isloading,setisLoading]=useState(true);
             const obj={
               startDate:dates?.start,
               endDate:dates?.end,
-              id:selectedobj?._id
+              id:selectedobj?._id,
+              user_id:select?.usersession?.userprofile?._id
             }
             console.log(obj);
           const resp=await  BorrowBook(obj);
-
+          console.log(resp);
+          if(resp?.mess=="data has updated"){
+            toast.success('data has updated');
+          }
+          else{
+            toast.error("some problem has occured")
+          }
+          setshowmodel(false);
           setrecall(!recall);
           socket.emit(`sendupdatedcountofbooks`,[1,'something']);
           console.log(resp);
@@ -219,6 +243,12 @@ const [isloading,setisLoading]=useState(true);
       </div>
 }
      </div>
+     <div>
+                <Toaster
+                position="top-right"
+                reverseOrder={false}
+            />
+            </div>
     </div>
     :
     <div className="bg-black w-[100%]   h-[100vh] flex items-center   justify-center text-[white]  text-[25px] tracking-wider font-semibold "   > 403 Forbidden: You do not have access to this page. </div>
@@ -241,13 +271,13 @@ const Innercard=(props)=>{
     {/* e?.volumeInfo?.publishedDate */}
     <p  className="w-[auto]  h-[40px] bg-[black] text-[black] border-[1px] border-[rgba(0,0,0)] whitespace-nowrap px-2  font-semibold tracking-wide bg-[rgba(0,0,0,.01)] flex items-center justify-center  rounded-md  ">Published Date:  {e?.volumeInfo?.publishedDate?dateconverter(e?.volumeInfo?.publishedDate):  "10-06-2022"}</p>
    { 
-    e?.borrowed? <button  className="w-[200px]  h-[40px] bg-[black] text-[white]  rounded-md " onClick={()=>{
+    e?.borrowed? <button  className="min-w-[120px] !z-40  h-[40px] bg-[black] text-[white]  rounded-md " onClick={()=>{
       console.log("hello world");
         // setshowmodel(!showmodel);
         // setselectedobj(e);
     }} > Checkout</button> :
     
-    <button  className="w-[200px]  h-[40px] bg-[black] text-[white]  rounded-md " onClick={()=>{
+    <button  className="min-w-[120px] !z-40  h-[40px] bg-[black] text-[white]  rounded-md " onClick={()=>{
       console.log("hello world");
         setshowmodel(!showmodel);
         setselectedobj(e);

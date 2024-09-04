@@ -17,7 +17,7 @@ export default function Library() {
     const [searchResults,setsearchResults]=useState([]);
     const [filteredsearchResults,setfilteredsearchResults]=useState([]);
     const selector=useSelector(state=>state);
-    console.log(selector);
+    console.log(selector?.usersession?.userprofile?._id);
     const [inputvalue,setInputValue]=useState();
     const [pagination,setpagination]= useState({
         startIndex:0,
@@ -26,8 +26,8 @@ export default function Library() {
 
    const [isloading,setisloading]=useState(true);
     const [state,setstate]=useState(false);
-    const listofLocalStorage=JSON.parse(localStorage.getItem("savelist"));
-    const [arr,setarr]=useState(JSON.parse(localStorage.getItem("savelist"))?.length?[...JSON.parse(localStorage.getItem("savelist"))]:[]);
+    const listofLocalStorage=JSON.parse(localStorage.getItem(`${selector?.usersession?.userprofile?._id}savelist`));
+    const [arr,setarr]=useState(JSON.parse(localStorage.getItem(`${selector?.usersession?.userprofile?._id}savelist`))?.length?[...JSON.parse(localStorage.getItem(`${selector?.usersession?.userprofile?._id}savelist`))]:[]);
     console.log(arr);
 
    
@@ -91,9 +91,9 @@ export default function Library() {
         // trendingApicall();
         
     },[]);
-    useEffect(()=>{
-        console.log("state got updated");
-    },[searchResults])
+    // useEffect(()=>{
+    //     console.log("state got updated");
+    // },[searchResults])
     useEffect(()=>{
             const id =setTimeout(() => {
                 searchapicall()
@@ -107,38 +107,43 @@ export default function Library() {
    
     function addElementId(id){
         console.log(id,arr);
-    
-        if (arr.length){
+        var new_arr=arr?.filter(e=>{
+            if(e.objectId)
+            return e;
+        })?.map(e=>e.objectId);
+        console.log(new_arr);
+        if (new_arr.length){
             // means arr is not null
-            console.log(arr.includes(id),"gone inside");
-            if(arr.includes(id)){
+            console.log(arr.length);
+            // console.log(arr.includes(id),"gone inside");
+            if(new_arr.includes(id)){
                 //  means elem is there inside the arr
-                var index= arr.indexOf(id);
+                var index= new_arr.indexOf(id);
                 console.log(index);
                 arr.splice(index,1);
             }
             else{
                 // means elem is not inside the arr
-                console.log(arr)
-                arr.push(id);
+                // console.log(arr)
+                arr.push({objectId:id,userId:selector?.usersession?.userprofile?._id});
                         }
         }
         else {
             //  arr is empty
-            arr.push(id);
+            arr.push({objectId:id,userId:selector?.usersession?.userprofile?._id});
             // localStorage.setItem("savelist",JSON.stringify([id]));
         }
-        localStorage.setItem("savelist",JSON.stringify(arr));
+        localStorage.setItem(`${selector?.usersession?.userprofile?._id}savelist`,JSON.stringify(arr));
          console.log(arr);
        setarr((prev)=>{
         return [...arr]
        })
        setstate(!state);
       }
-      useEffect(()=>{
-        console.log("after updating the state",arr);
+    //   useEffect(()=>{
+    //     console.log("after updating the state",arr);
   
-      },[arr])
+    //   },[arr])
     
 
       const refOne=useRef(null);
@@ -224,7 +229,7 @@ export default function Library() {
                 {
                  isloading? <BounceLoader className="mx-auto mt-[200px]" />:    newarr?.length? newarr.map((e,i)=>{
                             // console.log(e?.volumeInfo);
-                            return <CardComp keyvalue={i} key={i} data={e?.volumeInfo} id={e?._id} editHandler={editHandler} onClickHandler={addElementId} arr={arr} />
+                            return <CardComp keyvalue={i} key={i} data={e} id={e?._id} editHandler={editHandler} onClickHandler={addElementId} arr={arr} />
                         }):null
 // volumeInfo.          
                 }
@@ -238,7 +243,7 @@ export default function Library() {
             <div ref={refTwo} className='scroller-spec scroll-smooth  rounded-[20px]  bg-[rgba(0,0,0,.1)] opacity-[.8] w-[100%] h-[90%]  flex items-center gap-[20px] overflow-x-scroll  px-[20px]'>
                 {
                   isloading? <BounceLoader className="mx-auto mt-[200px] text-[white]" />:    newtrendings?.length?   newtrendings.map((e,i)=>{
-                            return  <CardComp keyvalue={i} data={e?.volumeInfo} key={i} id={e?._id} editHandler={editHandler} onClickHandler={addElementId} arr={arr} />
+                            return  <CardComp keyvalue={i} data={e} key={i} id={e?._id} editHandler={editHandler} onClickHandler={addElementId} arr={arr} />
                         }):null
                 }
                  <ChevronLeftIcon onClick={()=>scrollHandlerTwo("left")} className="!text-[28px] text-black active:bg-[rgba(0,0,0,.1)] cursor-pointer  w-[20px] h-[20px] rounded-[50%] absolute right-[50px] top-[10px]"/>

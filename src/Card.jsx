@@ -28,9 +28,10 @@ function dateconverter(dateString){
     return (formattedDate);
 }
 // editHandler={editHandler}
- const {keyvalue,editHandler,data,id,onClickHandler,arr}=props;
-//  console.log(data);
-
+ var {keyvalue,editHandler,data,id,onClickHandler,arr}=props;
+ var {borrowed}=(data );
+ var {volumeInfo}=data;
+ data=volumeInfo;
   const navi=useNavigate();
   return (
     // <div key={keyvalue}  className='w-[95%] hover:scale-[1.05] hover:shadow-lg  transition-all relative bg-[white] min-h-[200px]   shadow-sm border-[1px] flex  p-4  rounded-lg'>
@@ -70,7 +71,7 @@ function dateconverter(dateString){
                                     <div className='w-[100%] h-[40px]   flex '>
                                        {
                                            data?.categories?.map((e,i)=>{
-                                               return <div key={i} className='w-[auto] font-bold  text-[12px] flex h-[auto] !py-[5px] items-center justify-center px-[10px]   mt-[5px] text-[red] bg-[rgba(200,0,0,0.2)] rounded-md'>{e}</div>
+                                               return <div key={i} className='w-[auto] font-bold  text-[12px] flex h-[auto] !py-[5px] items-center justify-center px-[10px]   mt-[5px] text-[red] bg-[rgba(200,0,0,0.2)] rounded-md'>{e?.split(" ")[0] }</div>
                                            })
                                         }
                                         {/* publishedDate */}
@@ -85,7 +86,13 @@ function dateconverter(dateString){
                         editHandler(id)
                         }} className=" pt-[5px] !text-[26px] !text-[blue]  flex items-center justify-center  cursor-pointer  active:text-[red] active:scale-50 pb-1  absolute w-[20px] h-[20px] left-auto right-2 top-1 font-sans  transition-all"/> :<div></div>}
                         
-                     {type=="user"?   <FavoriteIcon onClick={()=>onClickHandler(id)} className={`delete   pt-[5px]   flex items-center justify-center  cursor-pointer  ${arr.includes(id)?"!text-[red]":"!text-[rgba(0,0,0)]"} active:text-[red] active:scale-50 pb-1  absolute w-[20px] h-[20px] left-auto right-2 top-1 font-sans  transition-all`}/>  :<></> }
+                     {type=="user"?!borrowed?   <FavoriteIcon onClick={()=>onClickHandler(id)} className={`delete   pt-[5px]   flex items-center justify-center  cursor-pointer  ${arr?.filter(e=>{
+            if (e?.userId == select?.usersession?.userprofile?._id) {
+                if (e.objectId) {
+                    return e;
+                }
+            }
+        })?.map(e=>e.objectId).includes(id)?"!text-[red]":"!text-[rgba(0,0,0)]"} active:text-[red] active:scale-50 pb-1  absolute w-[20px] h-[20px] left-auto right-2 top-1 font-sans  transition-all`}/> :<div className="flex items-center justify-center px-2 border-[1px] h-[30px] border-black ">Booked</div> :<></> }
                         </> 
                         :<div></div>
                         }      

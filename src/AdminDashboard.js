@@ -87,15 +87,16 @@ export default function AdminDashboard() {
                      })  
             }
         </div>
-        {selectedTabs=="User"?<div className="h-[100%] flex justify-center      flex-wrap gap-[20px] overflow-scroll   py-[40px] px-5 w-[85%] ml-auto mr-[0px]  ">
+        {selectedTabs=="User"?<div className="h-[100%] flex justify-center  border-[1px] border-[rgba(0,0,0,.2)]     flex-wrap gap-[20px] overflow-scroll   py-[40px] px-5 w-[85%] ml-auto mr-[0px]  ">
           {
             select?.count?.length ? select.count[3].map((e,i)=>{
+              console.log(e);
               if(e?.type!="admin")
               return <div className="w-[30%] min-w-[250px] rounded-[3px] gap-2 h-[250px] bg-[rgba(0,0,0,.1)] p-5  flex flex-col  " key={i}>
                 <div  className="flex justify-end items-center w-[100%] ">
                      <img src={e?.type=="user"?icon2: icon1} className="h-[30px]" />
                 </div>
-                <div className="w-[100%] h-[50%] text-[32px] serif flex items-center justify-center">{ e?.type=="user"? i+i-2:"-"}</div>
+                <div className={`w-[100%] h-[50%] ${ !e?.BorrowedList?.length? "text-[20px]": "text-[32px]"} serif flex items-center justify-center`}>{ e?.type=="user"? !e?.BorrowedList?.length?"Borrowed : 0 ":e?.BorrowedList?.length:"-"}</div>
                      <div className="capitalize px-2 font-medium tracking-wider serif" >{e?.UserName}</div>
                      <div className="capitalize font-medium !tracking-wider sans bg-[rgba(0,0,0,.9)] py-1 px-2 text-white">{e?.Email}</div>
               </div>
@@ -115,7 +116,7 @@ export default function AdminDashboard() {
             </div>
 {/*  slit ends over here */}
                     <div className="w-[90%] flex items-center pl-[20px] mt-[20px] h-[70%] bg-[rgba(0,0,0,.2)] rounded-[20px]">
-                        <div className="w-[50%] gap-4 pt-3 bg-white rounded-[20px] h-[90%] flex flex-col border-[1px] border-[white]">
+                        <div className="w-[50%] gap-4 pt-3 bg-white rounded-[20px] h-[90%] flex flex-col border-[1px] border-[white] overflow-y-hidden">
                            <div className="flex gap-3 w-[100%] pr-4 pt-2 items-center justify-end">
 
                             <label className="text-[18px]  font-medium tracking-wide " for="cars">Choose category</label>
@@ -262,7 +263,7 @@ const columns = [
       dataIndex: 'volumeInfo',
       key: 'volumeInfo',
       render:  (_, { volumeInfo }) =>{
-        return  (<a>{volumeInfo?.title.length>30?volumeInfo.title.slice(0,10)+"...":volumeInfo.title}</a>)
+        return  (<a>{volumeInfo?.title.length>10?volumeInfo.title.slice(0,10)+"...":volumeInfo.title}</a>)
       },
     },
     {
@@ -286,7 +287,7 @@ const columns = [
       dataIndex: 'volumeInfo',
       key: 'volumeInfo',
       render:  (_, { volumeInfo }) =>{
-        return  (<a className="bg-[rgba(0,0,0,.5)] font-medium tracking-wide py-1 px-2 text-[white]">{dateconverter(volumeInfo?.publishedDate)}</a>)
+        return  (<a className="bg-[rgba(0,0,0,.5)]  !min-w-[200px] font-medium tracking-wide py-1 rounded-[10px] px-2 text-[white]">{dateconverter(volumeInfo?.publishedDate)}</a>)
       },
     },
     // publishedDate
