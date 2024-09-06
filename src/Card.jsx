@@ -29,6 +29,10 @@ function dateconverter(dateString){
 }
 // editHandler={editHandler}
  var {keyvalue,editHandler,data,id,onClickHandler,arr}=props;
+ console.log(arr);
+ if(!arr.length){
+    arr=(JSON.parse(localStorage.getItem(`${select?.usersession?.userprofile?._id}savelist`)) )
+ }
  var {borrowed}=(data );
  var {volumeInfo}=data;
  data=volumeInfo;
