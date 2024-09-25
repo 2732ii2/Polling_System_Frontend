@@ -26,8 +26,8 @@ const Login =()=>{
     },[socket])
     const navi=useNavigate();
     const [states, setstates]=useState({
-        Email:"",
-        Password:""
+        Email:"admin@gmail.com",
+        Password:"123456"
     })
     function ChangeEventHandler(e,ele,state,setstates){
         console.log(e,ele.target.value,state,setstates);
