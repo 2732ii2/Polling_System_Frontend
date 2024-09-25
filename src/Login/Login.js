@@ -55,7 +55,13 @@ const Login =()=>{
                     </div>
                     <button onClick={async ()=>{
                         console.log(states);
-                        const resp= await SignIn(states);
+                      if(Object.keys(states).length !== Object.values(states).filter(e=>{
+                            if(e!=="")return e
+                        }).length){
+                            toast.error("Fill the credentials");
+                        }
+                        else
+                        {const resp= await SignIn(states);
                         console.log("=> resp",resp.mess);
                         if(resp?.mess==="user Successfully Login"){
                             dispatch(AddUserSession(resp));
@@ -74,7 +80,7 @@ const Login =()=>{
                         setstates({
                             Email:"",
                             Password:""
-                        })
+                        })}
          
                     }} className=" mt-[10px] bg-black w-[auto] mx-auto px-[50px] py-[10px] text-[20px] text-white rounded-[10px]">Login</button>
                     <p className="text-[18px] mt-[20px] w-[100%] text-center unselect">Don't have an account ? Go to <span onClick={()=>{
@@ -146,13 +152,19 @@ const SignUpComp=({show,setshow})=>{
    console.log(role);
     const SubmitHandler=async()=>{
         //  we have to check whether type of role is selected or not in future 
+        if((Object.keys(states).length !==( Object.values(states).filter(e=>{
+            if(e!=="")return e
+        }).length) ) || !Object.values(role).includes(true)){
+            toast.error("Fill the credentials");
+        }
+        else{
         const main={...states,"type":Object.keys(role).filter(e=>{
             if(role[e]){
                 return e;
             }
            
         })[0]
-    };
+    }
     console.log(main);
        try{
         const resp= await axios.post(`${Url}register`,main);
@@ -184,7 +196,7 @@ const SignUpComp=({show,setshow})=>{
         console.log(e);
         toast.error(e?.message);
 
-       }
+       }}
     }
     const [states, setstates]=useState({
         UserName:"",
