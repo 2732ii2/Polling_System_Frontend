@@ -1,3 +1,15 @@
+# It was not polling system , but it's a repository by the name Polling.
+As from the starting , I wanted to make a pollig system for understanding web socket's in depth, after it becomes more interesting, so in last end up creating Lbrary Management  System with Real time updates on Admin Dashboard 
+
+# Uploaded on Youtube Videos : https://www.youtube.com/watch?v=xZNq3ZrdiQ0&t=19s
+
+# Screenshot 
+<h4>Admin dashboard </h4>
+<img width="1440" alt="Screenshot 2024-10-09 at 12 09 54 AM" src="https://github.com/user-attachments/assets/ccd1d122-2570-4dbe-a97a-740db1cae7f7">
+<img width="1440" alt="Screenshot 2024-10-09 at 12 10 17 AM" src="https://github.com/user-attachments/assets/91bb1aa0-9ac5-4521-a27b-36d52bb92f71">
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
